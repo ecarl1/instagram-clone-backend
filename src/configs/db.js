@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const URI = "YOUR_MONGODBURI";
+const URI = "mongodb+srv://ericmarkcarlson:node123@cluster0.j4cyafb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 const connectDB = async () => {
   try {
