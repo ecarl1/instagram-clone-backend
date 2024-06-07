@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
-const connectDB = require("../configs/db");
-const User = require("../Models/userModel");
+const connectDB = require("../src/configs/db");
+const User = require("../src/Models/userModel");
 
 beforeAll(async () => {
   await connectDB();
 });
 
 afterAll(async () => {
-  await mongoose.connection.db.dropDatabase();
   await mongoose.disconnect();
 });
 
@@ -18,8 +17,8 @@ describe("User Model Test", () => {
 
   test("should create and save a user successfully", async () => {
     const userData = {
-      username: "testuser",
-      email: "testuser@example.com",
+      username: `testuser_${Date.now()}`,
+      email: `testuser_${Date.now()}@example.com`,
       password: "password123",
       role: "user",
     };
@@ -44,8 +43,8 @@ describe("User Model Test", () => {
 
   test("should enforce unique constraints", async () => {
     const userData = {
-      username: "uniqueuser",
-      email: "unique@example.com",
+      username: `uniqueuser_${Date.now()}`,
+      email: `unique_${Date.now()}@example.com`,
       password: "password123",
       role: "user",
     };
@@ -54,7 +53,6 @@ describe("User Model Test", () => {
 
     const user2 = new User(userData);
 
-    await expect(user2.save()).rejects.toThrow(mongoose.Error.ValidationError);
+    await expect(user2.save()).rejects.toThrow(mongoose.Error.MongoServerError);
   });
-
 });

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const connectDB = require("../config/db");
+const connectDB = require("../src/configs/db");
 
 jest.mock("mongoose", () => ({
   connect: jest.fn(),
@@ -13,8 +13,7 @@ describe("Database Connection", () => {
     await connectDB();
 
     expect(mongoose.connect).toHaveBeenCalledWith(
-      "mongodb+srv://ericmarkcarlson:node123@cluster0.j4cyafb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-      { useNewUrlParser: true, useUnifiedTopology: true }
+      "mongodb+srv://ericmarkcarlson:node123@cluster0.j4cyafb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     );
     expect(console.log).toHaveBeenCalledWith("DB Connected Successfully ✅");
   });
@@ -27,8 +26,7 @@ describe("Database Connection", () => {
     await connectDB();
 
     expect(mongoose.connect).toHaveBeenCalledWith(
-      "mongodb+srv://ericmarkcarlson:node123@cluster0.j4cyafb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-      { useNewUrlParser: true, useUnifiedTopology: true }
+      "mongodb+srv://ericmarkcarlson:node123@cluster0.j4cyafb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     );
     expect(console.log).toHaveBeenCalledWith("Authentication to database failed ❗");
     expect(process.exit).toHaveBeenCalledWith(1);
