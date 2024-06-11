@@ -24,7 +24,19 @@ const updateArticle = async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
     if (req.user._id === article.user.toString()) {
-      await Article.updateOne({ $set: req.body });
+      const allowedUpdates = ['title', 'content', 'tags']; // Define the fields that are allowed to be updated
+      const updates = Object.keys(req.body);
+      const isValidOperation = updates.every(update => allowedUpdates.includes(update));
+
+      if (!isValidOperation) {
+        return res.status(400).send({
+          status: "failure",
+          message: "Invalid updates!",
+        });
+      }
+
+      updates.forEach(update => article[update] = req.body[update]);
+      await article.save();
       res.status(200).send({
         status: "success",
         message: "article has been updated",
