@@ -35,7 +35,7 @@ const getbyPostId = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       status: "failure",
-      message: e.message,
+      message: error.message,
     });
   }
 };
