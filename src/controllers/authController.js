@@ -90,10 +90,15 @@ const logout = async (req, res) => {
     });
   }
 };
+
+//updated this
+//error occurs because the verify middleware does not return immediately after 
+//sending the response when no authorization header is provided. Adding a return 
+//statement to ensure that the function exits after sending the response resolved this issue.
 const verify = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
-    res.status(403).json("You are not authorized");
+    return res.status(403).json("You are not authorized");
   }
   const token = authHeader.split(" ")[1];
   try {
@@ -113,10 +118,17 @@ const verify = async (req, res, next) => {
     });
   }
 };
+
+//updated the refresh 
+//The refresh function should return immediately after sending the 
+//response if the refreshToken is not provided. 
+//The issue arises because the current implementation does not return after 
+//sending the response, causing the code to continue executing.
+//Ensure that the function returns immediately after sending the response if no refreshToken is provided:
 const refresh = async (req, res) => {
   const refreshToken = req.body.token;
   if (!refreshToken) {
-    res.status(401).send({
+    return res.status(401).send({
       status: "failure",
       message: "You are not authenticated!",
     });
@@ -127,7 +139,7 @@ const refresh = async (req, res) => {
       { jwtToken: true }
     );
     if (!token) {
-      res.status(200).send({
+      return res.status(200).send({
         status: "failure",
         message: "Refresh token is not valid!",
       });
@@ -137,7 +149,10 @@ const refresh = async (req, res) => {
       "YOUR_SECRETKEY_REFRESHTOKEN",
       async (err, user) => {
         if (err) {
-          throw new Error("token is not valid!");
+          return res.status(500).send({
+            status: "failure",
+            message: "token is not valid!",
+          });
         }
         const newAccessToken = generateToken.generateAccessToken(user);
         const newRefreshToken = generateToken.generateRefreshToken(user);
@@ -158,6 +173,8 @@ const refresh = async (req, res) => {
     });
   }
 };
+
+
 
 module.exports = {
   signup,

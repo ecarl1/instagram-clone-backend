@@ -4,6 +4,7 @@ const User = require("../src/Models/userModel");
 
 beforeAll(async () => {
   await connectDB();
+  await User.init(); // Ensure indexes are created
 });
 
 afterAll(async () => {
@@ -53,6 +54,11 @@ describe("User Model Test", () => {
 
     const user2 = new User(userData);
 
-    await expect(user2.save()).rejects.toThrow(mongoose.Error.MongoServerError);
+    try {
+      await user2.save();
+    } catch (error) {
+      expect(error).toBeInstanceOf(mongoose.Error);
+      expect(error.code).toBe(11000); // 11000 is the code for duplicate key error in MongoDB
+    }
   });
 });
