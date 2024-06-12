@@ -105,29 +105,42 @@ describe("Article Controller", () => {
     const article = {
       _id: articleId,
       title: "Original Title",
-      description: "Original description",
-      user: "1234567890"
+      content: "Original content",
+      tags: ["original"],
+      user: "1234567890",
+      save: jest.fn().mockResolvedValue({}), // Mock save method
     };
     const reqBody = {
       title: "Updated Title",
-      description: "Updated description"
+      content: "Updated content",
     };
-
+  
+    // Mock the necessary methods
     Article.findById = jest.fn().mockResolvedValue(article);
-    Article.updateOne = jest.fn().mockResolvedValue({});
-
+  
+    // Make the request
     const response = await supertest(app)
       .put(`/articles/${articleId}`)
       .send(reqBody);
-
+  
+    // Check if Article.findById was called with the correct argument
     expect(Article.findById).toHaveBeenCalledWith(articleId);
-    expect(Article.updateOne).toHaveBeenCalledWith({ $set: reqBody });
+    // Check if the article.save method was called
+    expect(article.save).toHaveBeenCalled();
+    // Check the response
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       status: "success",
       message: "article has been updated",
     });
+  
+    // Check that the article fields were updated correctly
+    expect(article.title).toBe(reqBody.title);
+    expect(article.content).toBe(reqBody.content);
   }, 10000); // Set timeout to 10000ms
+  
+  
+  
 
   test("should return 401 if user is not authorized to update the article", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
