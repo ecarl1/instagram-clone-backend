@@ -41,18 +41,18 @@ describe("Comment Controller", () => {
       articleId: "60c72b2f9b1d4c3c4c8e1f30",
       comment: "This is a test comment",
     };
-
+  
     const savedComment = new Comment({ ...reqBody, user: "1234567890" });
     Comment.prototype.save = jest.fn().mockResolvedValue(savedComment);
     Article.findOneAndUpdate = jest.fn().mockResolvedValue({});
-
+  
     const response = await supertest(app)
       .post("/comments")
       .send(reqBody);
-
+  
     expect(Comment.prototype.save).toHaveBeenCalled();
     expect(Article.findOneAndUpdate).toHaveBeenCalledWith(
-      { _id: reqBody.articleId },
+      { _id: mongoose.Types.ObjectId(reqBody.articleId.trim()) },
       { $push: { comment: savedComment._id } }
     );
     expect(response.status).toBe(200);
@@ -61,6 +61,7 @@ describe("Comment Controller", () => {
       message: "Comment has been created",
     });
   }, 10000); // Set timeout to 10000ms
+  
 
   test("should return 400 if validation fails", async () => {
     const reqBody = {
@@ -103,18 +104,18 @@ describe("Comment Controller", () => {
       articleId: "60c72b2f9b1d4c3c4c8e1f30",
       comment: "This is a test comment",
     };
-
+  
     const savedComment = new Comment({ ...reqBody, user: "1234567890" });
     Comment.prototype.save = jest.fn().mockResolvedValue(savedComment);
     Article.findOneAndUpdate = jest.fn().mockRejectedValue(new Error("Update error"));
-
+  
     const response = await supertest(app)
       .post("/comments")
       .send(reqBody);
-
+  
     expect(Comment.prototype.save).toHaveBeenCalled();
     expect(Article.findOneAndUpdate).toHaveBeenCalledWith(
-      { _id: reqBody.articleId },
+      { _id: mongoose.Types.ObjectId(reqBody.articleId.trim()) },
       { $push: { comment: savedComment._id } }
     );
     expect(response.status).toBe(500);
@@ -123,6 +124,7 @@ describe("Comment Controller", () => {
       message: "Update error",
     });
   }, 10000); // Set timeout to 10000ms
+  
 
   test("should get comments by post ID successfully", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
