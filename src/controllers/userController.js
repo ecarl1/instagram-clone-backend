@@ -186,6 +186,8 @@ const followUser = async (req, res) => {
     });
   }
 };
+
+//stopped here
 const unfollowUser = async (req, res) => {
   try {
     const currentUser = await User.findById({ _id: req.user._id });
@@ -247,7 +249,6 @@ const searchUsers = async (req, res) => {
   }
 };
 module.exports = {
-  deleteUser,
   updateUser,
   getUser,
   getFollowings,

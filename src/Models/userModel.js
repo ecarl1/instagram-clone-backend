@@ -52,4 +52,7 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+// Add a compound index for username and email to enforce uniqueness
+UserSchema.index({ username: 1, email: 1 }, { unique: true });
+
 module.exports = mongoose.model("User", UserSchema);

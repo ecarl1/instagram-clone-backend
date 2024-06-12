@@ -14,7 +14,8 @@ app.use("/api/user", userRoute);
 app.use("/api/article", articleRoute);
 app.use("/api/comment", commentRoute);
 app.use("/", (req, res) => {
-  res.send(`${req.method} Route ${req.path} not found !`);
+  console.log(`Invalid route access: ${req.method} ${req.path}`);
+  res.send("The requested route was not found on this server.");
 });
 app.listen(PORT, () => {
   console.log(`server run on port ${PORT} ✅`);
