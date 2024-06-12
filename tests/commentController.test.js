@@ -4,16 +4,24 @@ const express = require("express");
 const { addComment, getbyPostId } = require("../src/controllers/commentController");
 const Comment = require("../src/Models/commentModel");
 const Article = require("../src/Models/articleModel");
+const { check, validationResult } = require('express-validator');
 
 const app = express();
 app.use(express.json());
 
-app.post("/comments", (req, res, next) => {
-  req.user = { _id: "1234567890" }; // Mocking req.user for addComment
-  next();
-}, addComment);
+app.post("/comments", 
+  [
+    check('articleId', 'Article ID is required').notEmpty().isMongoId(),
+    check('comment', 'Comment is required').notEmpty()
+  ], 
+  (req, res, next) => {
+    req.user = { _id: "1234567890" }; // Mocking req.user for addComment
+    next();
+  }, 
+  addComment
+);
 
-app.get("/comments/:ArticleId", getbyPostId);
+app.get("/comments/:articleId", getbyPostId);
 
 jest.mock("../src/Models/commentModel");
 jest.mock("../src/Models/articleModel");
@@ -31,7 +39,7 @@ describe("Comment Controller", () => {
   test("should add a comment successfully", async () => {
     const reqBody = {
       articleId: "60c72b2f9b1d4c3c4c8e1f30",
-      description: "This is a test comment",
+      comment: "This is a test comment",
     };
 
     const savedComment = new Comment({ ...reqBody, user: "1234567890" });
@@ -54,10 +62,26 @@ describe("Comment Controller", () => {
     });
   }, 10000); // Set timeout to 10000ms
 
+  test("should return 400 if validation fails", async () => {
+    const reqBody = {
+      articleId: "", // Invalid articleId
+      comment: "", // Empty comment
+    };
+
+    const response = await supertest(app)
+      .post("/comments")
+      .send(reqBody);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      errors: expect.any(Array),
+    });
+  }, 10000); // Set timeout to 10000ms
+
   test("should return 500 if there is an error while saving comment", async () => {
     const reqBody = {
       articleId: "60c72b2f9b1d4c3c4c8e1f30",
-      description: "This is a test comment",
+      comment: "This is a test comment",
     };
 
     Comment.prototype.save = jest.fn().mockRejectedValue(new Error("Save error"));
@@ -77,7 +101,7 @@ describe("Comment Controller", () => {
   test("should return 500 if there is an error while updating the article", async () => {
     const reqBody = {
       articleId: "60c72b2f9b1d4c3c4c8e1f30",
-      description: "This is a test comment",
+      comment: "This is a test comment",
     };
 
     const savedComment = new Comment({ ...reqBody, user: "1234567890" });
@@ -145,5 +169,5 @@ describe("Comment Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000m
+  }, 10000); // Set timeout to 10000ms
 });
