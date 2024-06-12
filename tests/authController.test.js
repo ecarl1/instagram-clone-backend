@@ -13,7 +13,6 @@ app.post("/signup", signup);
 app.post("/login", login);
 app.post("/logout", logout);
 app.post("/refresh", refresh);
-//
 
 
 // Add a protected route for testing the verify middleware
