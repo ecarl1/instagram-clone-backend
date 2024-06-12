@@ -3,6 +3,7 @@ const authController = require("../controllers/authController");
 const commentController = require("../controllers/commentController");
 const { check } = require('express-validator');
 
+// POST /comments - Add a comment
 router.post(
   "/",
   authController.verify,
@@ -13,6 +14,7 @@ router.post(
   commentController.addComment
 );
 
+// GET /comments/:articleId - Get comments by article ID
 router.get("/:articleId", commentController.getbyPostId);
 
 module.exports = router;

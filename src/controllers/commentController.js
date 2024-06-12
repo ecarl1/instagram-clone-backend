@@ -1,6 +1,7 @@
 const Comment = require("../Models/commentModel");
 const Article = require("../Models/articleModel");
 const { check, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
 const addComment = async (req, res) => {
   // Input validation
@@ -16,17 +17,17 @@ const addComment = async (req, res) => {
     const { articleId, comment: commentText } = req.body;
     const sanitizedArticleId = articleId.trim();
     const sanitizedComment = commentText.trim();
-    
+
     const comment = {
       user: req.user._id,
-      comment: sanitizedComment
+      comment: sanitizedComment,
     };
 
     const commentToSave = new Comment(comment);
     const savedComment = await commentToSave.save();
 
     await Article.findOneAndUpdate(
-      { _id: sanitizedArticleId },
+      { _id: mongoose.Types.ObjectId(sanitizedArticleId) },
       { $push: { comment: savedComment._id } }
     );
 
