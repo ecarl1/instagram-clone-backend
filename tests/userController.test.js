@@ -90,7 +90,7 @@ describe("User Controller", () => {
   }, 10000); // Set timeout to 10000ms
 
   test("should return 400 if user is not authorized to update the account", async () => {
-    const userId = "1234567890";
+    //const userId = "1234567890";
     const reqBody = {
       username: "updatedUser",
       password: "newPassword123",
@@ -486,11 +486,7 @@ test("should return 500 if user does not exist while getting followings", async 
   
 
   test("should return 500 if there is an error while following user", async () => {
-    const currentUser = {
-      _id: "1234567890",
-      username: "currentuser",
-      followings: []
-    };
+    
   
     User.findById.mockRejectedValue(new Error("Find error"));
   
@@ -564,11 +560,7 @@ test("should return 500 if user does not exist while getting followings", async 
   }, 10000); // Set timeout to 10000ms
 
   test("should return 500 if there is an error while unfollowing user", async () => {
-    const currentUser = {
-      _id: "1234567890",
-      username: "currentuser",
-      followings: ["0987654321"]
-    };
+    
   
     User.findById.mockRejectedValue(new Error("Find error"));
   

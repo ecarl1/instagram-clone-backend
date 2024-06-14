@@ -256,8 +256,8 @@ describe("Article Controller", () => {
 
   test("should get timeline articles successfully", async () => {
     const userid = "1234567890";
-    const page = 0;
-    const limit = 1;
+    //const page = 0;
+    //const limit = 1;
     const user = {
       _id: userid,
       followings: ["followId1", "followId2"]

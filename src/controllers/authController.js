@@ -52,7 +52,7 @@ const login = async (req, res) => {
     await User.findByIdAndUpdate(user._id, {
       jwtToken: refreshToken,
     });
-    const { jwtToken, password: newpass, ...other } = user._doc;
+    const { jwtToken, ...other } = user._doc;
     res.status(200).send({
       status: "success",
       message: "logged in successfully",
