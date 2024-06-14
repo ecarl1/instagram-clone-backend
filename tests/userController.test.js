@@ -90,7 +90,6 @@ describe("User Controller", () => {
   }, 10000); // Set timeout to 10000ms
 
   test("should return 400 if user is not authorized to update the account", async () => {
-    const userId = "1234567890";
     const reqBody = {
       username: "updatedUser",
       password: "newPassword123",

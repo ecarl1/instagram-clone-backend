@@ -1,6 +1,8 @@
 const Article = require("../Models/articleModel");
 const User = require("../Models/userModel");
 const Comment = require("../Models/commentModel");
+const { check, validationResult } = require('express-validator');
+
 
 
 //start
@@ -20,6 +22,7 @@ const createArticle = async (req, res) => {
     });
   }
 };
+//old code 
 const updateArticle = async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
@@ -160,3 +163,5 @@ module.exports = {
   getArticle,
   likeUnlike,
 };
+
+
