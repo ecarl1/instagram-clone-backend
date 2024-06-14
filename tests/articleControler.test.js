@@ -13,10 +13,11 @@ app.post("/articles", (req, res, next) => {
   next();
 }, createArticle);
 
-app.put("/articles/likeUnlike/:id", (req, res, next) => {
-    req.user = { _id: "1234567890" }; // Mocking req.user if needed
-    next();
-  }, likeUnlike);
+app.put("/articles/:id/like", (req, res, next) => {
+  req.user = { _id: "1234567890" }; // Mocking req.user if needed
+  next();
+}, likeUnlike);
+
 
 app.get("/articles/:id", (req, res, next) => {
   req.user = { _id: "1234567890" }; // Mocking req.user if needed
@@ -459,5 +460,76 @@ describe("Article Controller", () => {
   }, 10000); // Set timeout to 10000ms
   
   //could not get the like and unlike to work
+
+  test("should like an article successfully", async () => {
+    const articleId = "60c72b2f9b1d4c3c4c8e1f30";
+    const userId = "1234567890";
+    
+    const article = {
+      _id: articleId,
+      likes: [],
+      updateOne: jest.fn().mockResolvedValue({}),
+    };
+    
+    Article.findById = jest.fn().mockResolvedValue(article);
+  
+    const response = await supertest(app)
+      .put(`/articles/${articleId}/like`)
+      .set('Authorization', `Bearer valid-token`);
+    
+    console.log('Article.findById calls:', Article.findById.mock.calls);
+    expect(Article.findById).toHaveBeenCalledWith(articleId);
+    expect(article.updateOne).toHaveBeenCalledWith({ $push: { likes: userId } });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: "success",
+      message: "the article has been liked",
+    });
+  }, 10000); // Set timeout to 10000ms
+
+test("should dislike an article successfully", async () => {
+    const articleId = "60c72b2f9b1d4c3c4c8e1f30";
+    const userId = "1234567890";
+    
+    const article = {
+      _id: articleId,
+      likes: [userId],
+      updateOne: jest.fn().mockResolvedValue({}),
+    };
+    
+    Article.findById = jest.fn().mockResolvedValue(article);
+  
+    const response = await supertest(app)
+      .put(`/articles/${articleId}/like`)
+      .set('Authorization', `Bearer valid-token`);
+    
+    console.log('Article.findById calls:', Article.findById.mock.calls);
+    expect(Article.findById).toHaveBeenCalledWith(articleId);
+    expect(article.updateOne).toHaveBeenCalledWith({ $pull: { likes: userId } });
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: "success",
+      message: "the article has been disliked",
+    });
+  }, 10000); // Set timeout to 10000ms
+
+test("should return 500 if there is an error", async () => {
+    const articleId = "60c72b2f9b1d4c3c4c8e1f30";
+    
+    Article.findById = jest.fn().mockRejectedValue(new Error("Find error"));
+  
+    const response = await supertest(app)
+      .put(`/articles/${articleId}/like`)
+      .set('Authorization', `Bearer valid-token`);
+    
+    console.log('Article.findById calls:', Article.findById.mock.calls);
+    expect(Article.findById).toHaveBeenCalledWith(articleId);
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({
+      status: "failure",
+      message: "Find error",
+    });
+  }, 10000); // Set timeout to 10000ms
+
 
 });

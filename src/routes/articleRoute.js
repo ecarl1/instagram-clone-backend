@@ -8,6 +8,7 @@ router.delete("/:id", authController.verify, articleController.deleteArticle);
 router.get("/timeline", authController.verify, articleController.getTimeline);
 router.get("/u/:username", articleController.getArticlesUser);
 router.get("/:id", articleController.getArticle);
-router.get("/:id/like", authController.verify, articleController.likeUnlike);
+//changed from get to put
+router.put("/:id/like", authController.verify, articleController.likeUnlike); 
 
 module.exports = router;

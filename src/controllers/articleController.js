@@ -24,8 +24,11 @@ const updateArticle = async (req, res) => {
   try {
     const article = await Article.findById(req.params.id);
     if (req.user._id === article.user.toString()) {
-      const allowedUpdates = ['title', 'content', 'tags']; // Define the fields that are allowed to be updated
+      //fields that are allowed to be changed are defined
+      const allowedUpdates = ['title', 'content', 'tags']; 
+      //getting the fields that are to be updated from the request 
       const updates = Object.keys(req.body);
+      //checking if every field in the request is allowed to be updated
       const isValidOperation = updates.every(update => allowedUpdates.includes(update));
 
       if (!isValidOperation) {
@@ -35,6 +38,7 @@ const updateArticle = async (req, res) => {
         });
       }
 
+      //updating each field explicitly 
       updates.forEach(update => article[update] = req.body[update]);
       await article.save();
       res.status(200).send({
@@ -102,7 +106,7 @@ const getTimeline = async (req, res) => {
           .populate("user", "username profilePicture");
       })
     );
-    arr = myArticles.concat(...followingsArticles);
+    let arr = myArticles.concat(...followingsArticles);
     res.status(200).send({
       status: "success",
       Articles: arr,
@@ -115,6 +119,7 @@ const getTimeline = async (req, res) => {
     });
   }
 };
+
 const getArticlesUser = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });
@@ -159,7 +164,7 @@ const likeUnlike = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       status: "failure",
-      message: e.message,
+      message: error.message,
     });
   }
 };
