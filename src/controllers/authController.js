@@ -125,7 +125,7 @@ const logout = async (req, res) => {
     const result = await User.updateOne(
       { jwtToken: sanitizedRefreshToken },
       { $unset: { jwtToken: "" } }
-    ).exec();
+    );
 
     if (result.nModified === 0) {
       return res.status(400).send({
