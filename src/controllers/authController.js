@@ -30,21 +30,24 @@ const signup = async (req, res) => {
   }
 };
 
+const { check, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
+
 const login = async (req, res) => {
+  // Input validation
+  await check('username', 'Username is required').notEmpty().run(req);
+  await check('password', 'Password is required').notEmpty().run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const { username, password } = req.body;
 
-    // Input validation
-    if (!username || !password) {
-      return res.status(400).send({
-        status: "failure",
-        message: "Username and password are required",
-      });
-    }
-
-    //sss
     // Sanitize input to prevent injection attacks
-    const sanitizedUsername = username.trim().replace(/[^\w\s]/gi, '').toLowerCase();
+    const sanitizedUsername = username.trim().toLowerCase();
 
     // Use parameterized queries to avoid NoSQL injection
     const user = await User.findOne({ username: sanitizedUsername });
