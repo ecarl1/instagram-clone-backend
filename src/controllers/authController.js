@@ -88,7 +88,7 @@ const login = async (req, res) => {
       jwtToken: refreshToken,
     });
 
-    const { jwtToken, password: newpass, ...other } = user._doc;
+    const { jwtToken, ...other } = user._doc;
     console.log('Login successful');
     res.status(200).send({
       status: "success",
@@ -107,37 +107,22 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  // Input validation
-  await check('refreshToken', 'Refresh token is required').notEmpty().run(req);
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { refreshToken } = req.body;
-
-    // Sanitize input to prevent injection attacks
-    const sanitizedRefreshToken = refreshToken.trim();
-
-    // Use parameterized queries to avoid NoSQL injection
-    const result = await User.updateOne(
-      { jwtToken: sanitizedRefreshToken },
-      { $unset: { jwtToken: "" } }
-    );
-
-    if (result.nModified === 0) {
+    if (refreshToken) {
+      await User.updateOne({ jwtToken: refreshToken }, [
+        { $unset: ["jwtToken"] },
+      ]);
+      res.status(200).send({
+        status: "success",
+        message: "You've been logged out",
+      });
+    } else {
       return res.status(400).send({
         status: "failure",
-        message: "Logout error: token not found",
+        message: "logout error",
       });
     }
-
-    res.status(200).send({
-      status: "success",
-      message: "You've been logged out",
-    });
   } catch (e) {
     res.status(500).send({
       status: "failure",
