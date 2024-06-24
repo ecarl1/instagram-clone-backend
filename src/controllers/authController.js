@@ -124,7 +124,7 @@ const logout = async (req, res) => {
     // Use parameterized queries to avoid NoSQL injection
     const result = await User.updateOne(
       { jwtToken: sanitizedRefreshToken },
-      [{ $unset: ["jwtToken"] }]
+      { $unset: { jwtToken: "" } }
     );
 
     if (result.nModified === 0) {
@@ -145,6 +145,7 @@ const logout = async (req, res) => {
     });
   }
 };
+
 
 //updated this
 //error occurs because the verify middleware does not return immediately after 
