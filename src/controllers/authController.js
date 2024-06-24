@@ -46,6 +46,7 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    //jhj
     // Sanitize input to prevent injection attacks
     const sanitizedUsername = username.trim().toLowerCase();
 
