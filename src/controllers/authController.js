@@ -107,22 +107,36 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
+  // Input validation
+  await check('refreshToken', 'Refresh token is required').notEmpty().run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     const { refreshToken } = req.body;
-    if (refreshToken) {
-      await User.updateOne({ jwtToken: refreshToken }, [
-        { $unset: ["jwtToken"] },
-      ]);
-      res.status(200).send({
-        status: "success",
-        message: "You've been logged out",
-      });
-    } else {
+
+    // Sanitize input to prevent injection attacks
+    const sanitizedRefreshToken = refreshToken.trim();
+
+    // Use parameterized queries to avoid NoSQL injection
+    const result = await User.updateOne({ jwtToken: sanitizedRefreshToken }, [
+      { $unset: ["jwtToken"] },
+    ]);
+
+    if (result.nModified === 0) {
       return res.status(400).send({
         status: "failure",
-        message: "logout error",
+        message: "Logout error: token not found",
       });
     }
+
+    res.status(200).send({
+      status: "success",
+      message: "You've been logged out",
+    });
   } catch (e) {
     res.status(500).send({
       status: "failure",
