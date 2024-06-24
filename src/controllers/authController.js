@@ -122,9 +122,10 @@ const logout = async (req, res) => {
     const sanitizedRefreshToken = refreshToken.trim();
 
     // Use parameterized queries to avoid NoSQL injection
-    const result = await User.updateOne({ jwtToken: sanitizedRefreshToken }, [
-      { $unset: ["jwtToken"] },
-    ]);
+    const result = await User.updateOne(
+      { jwtToken: sanitizedRefreshToken },
+      [{ $unset: ["jwtToken"] }]
+    );
 
     if (result.nModified === 0) {
       return res.status(400).send({
