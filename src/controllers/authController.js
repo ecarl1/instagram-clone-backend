@@ -34,7 +34,7 @@ const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Input validation and sanitization
+    // Input validation
     if (!username || !password) {
       return res.status(400).send({
         status: "failure",
@@ -42,8 +42,9 @@ const login = async (req, res) => {
       });
     }
 
+    //ss
     // Sanitize input to prevent injection attacks
-    const sanitizedUsername = username.replace(/[^a-zA-Z0-9]/g, '').trim().toLowerCase();
+    const sanitizedUsername = username.trim().toLowerCase();
 
     // Use parameterized queries to avoid NoSQL injection
     const user = await User.findOne({ username: sanitizedUsername });
@@ -68,7 +69,7 @@ const login = async (req, res) => {
       jwtToken: refreshToken,
     });
 
-    const { jwtToken, ...other } = user._doc;
+    const { jwtToken, password: newpass, ...other } = user._doc;
     res.status(200).send({
       status: "success",
       message: "Logged in successfully",
