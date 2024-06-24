@@ -30,42 +30,18 @@ const signup = async (req, res) => {
   }
 };
 
-const { check, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
-
 const login = async (req, res) => {
-  // Input validation
-  await check('username', 'Username is required').notEmpty().run(req);
-  await check('password', 'Password is required').notEmpty().run(req);
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
+    console.log("login function called");
     const { username, password } = req.body;
-
-    // Sanitize input to prevent injection attacks
-    const sanitizedUsername = username.trim().toLowerCase();
-
-    //hghg
-    // Ensure the username is a string and contains only allowed characters
-    if (typeof sanitizedUsername !== 'string' || /[^a-zA-Z0-9]/.test(sanitizedUsername)) {
-      return res.status(400).send({
-        status: "failure",
-        message: "Invalid username format",
-      });
-    }
-
-    // Use parameterized queries to avoid NoSQL injection
-    const user = await User.findOne({ username: sanitizedUsername }).exec();
+    const user = await User.findOne({ username: username.trim().toLowerCase() });
     if (!user) {
       return res.status(401).send({
         status: "failure",
         message: "User does not exist",
       });
     }
+    console.log("User found:", user);
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
@@ -74,6 +50,7 @@ const login = async (req, res) => {
         message: "Password is incorrect",
       });
     }
+    console.log("Password match:", match);
 
     const accessToken = generateToken.generateAccessToken(user);
     const refreshToken = generateToken.generateRefreshToken(user);

@@ -107,10 +107,12 @@ describe("Auth Controller", () => {
       password: "password123"
     };
 
+    const hashedPassword = await bcrypt.hash("password123", 10);
+
     const user = {
       _id: "1234567890",
       username: "existinguser",
-      password: await bcrypt.hash("password123", 10),
+      password: hashedPassword,
       email: "existinguser@example.com",
       _doc: {
         _id: "1234567890",
@@ -124,16 +126,23 @@ describe("Auth Controller", () => {
       }
     };
 
-    User.findOne = jest.fn().mockResolvedValue(user);
-    bcrypt.compare = jest.fn().mockResolvedValue(true);
-    generateToken.generateAccessToken = jest.fn().mockReturnValue("access_token");
-    generateToken.generateRefreshToken = jest.fn().mockReturnValue("refresh_token");
+    User.findOne.mockResolvedValue(user);
+    bcrypt.compare.mockResolvedValue(true);
+    generateToken.generateAccessToken.mockReturnValue("access_token");
+    generateToken.generateRefreshToken.mockReturnValue("refresh_token");
+    User.findByIdAndUpdate.mockResolvedValue({});
 
     const response = await supertest(app)
       .post("/login")
       .send(reqBody);
 
-    expect(User.findOne).toHaveBeenCalledWith({ username: reqBody.username });
+    console.log('User.findOne called with:', User.findOne.mock.calls);
+    console.log('bcrypt.compare called with:', bcrypt.compare.mock.calls);
+    console.log('generateAccessToken called with:', generateToken.generateAccessToken.mock.calls);
+    console.log('generateRefreshToken called with:', generateToken.generateRefreshToken.mock.calls);
+    console.log('User.findByIdAndUpdate called with:', User.findByIdAndUpdate.mock.calls);
+
+    expect(User.findOne).toHaveBeenCalledWith({ username: reqBody.username.trim().toLowerCase() });
     expect(bcrypt.compare).toHaveBeenCalledWith(reqBody.password, user.password);
     expect(generateToken.generateAccessToken).toHaveBeenCalledWith(user);
     expect(generateToken.generateRefreshToken).toHaveBeenCalledWith(user);
@@ -141,7 +150,7 @@ describe("Auth Controller", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
       status: "success",
-      message: "logged in successfully",
+      message: "Logged in successfully",
       data: {
         _id: user._id,
         username: user.username,
@@ -156,6 +165,7 @@ describe("Auth Controller", () => {
       refreshToken: "refresh_token",
     });
   }, 10000); // Set timeout to 10000ms
+
 
 
   test("should return 401 if user does not exist", async () => {
