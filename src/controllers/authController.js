@@ -49,6 +49,7 @@ const login = async (req, res) => {
     // Sanitize input to prevent injection attacks
     const sanitizedUsername = username.trim().toLowerCase();
 
+    //sdsdsdsd
     // Use parameterized queries to avoid NoSQL injection
     const user = await User.findOne({ username: sanitizedUsername }).exec();
     if (!user) {
