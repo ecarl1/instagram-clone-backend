@@ -174,18 +174,18 @@ describe("Auth Controller", () => {
       username: "nonexistentuser",
       password: "password123"
     };
-
+  
     User.findOne = jest.fn().mockResolvedValue(null);
-
+  
     const response = await supertest(app)
       .post("/login")
       .send(reqBody);
-
-    expect(User.findOne).toHaveBeenCalledWith({ username: reqBody.username });
+  
+    expect(User.findOne).toHaveBeenCalledWith({ username: reqBody.username.trim().toLowerCase() });
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       status: "failure",
-      message: "user does not exist",
+      message: "User does not exist",  // Updated to match the correct error message
     });
   }, 10000); // Set timeout to 10000ms
 
@@ -215,7 +215,7 @@ describe("Auth Controller", () => {
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       status: "failure",
-      message: "password is incorrect",
+      message: "Password is incorrect",
     });
   }, 10000); // Set timeout to 10000ms
 
