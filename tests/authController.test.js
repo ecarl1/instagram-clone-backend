@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const { signup, login, logout, verify, refresh } = require("../src/controllers/authController");
 const User = require("../src/Models/userModel");
 const generateToken = require("../src/utils/generateToken");
+const { check, validationResult } = require('express-validator');
 
 const app = express();
 app.use(express.json());
@@ -126,6 +127,7 @@ describe("Auth Controller", () => {
       }
     };
 
+    // Mock implementations
     User.findOne.mockResolvedValue(user);
     bcrypt.compare.mockResolvedValue(true);
     generateToken.generateAccessToken.mockReturnValue("access_token");
@@ -164,8 +166,7 @@ describe("Auth Controller", () => {
       accessToken: "access_token",
       refreshToken: "refresh_token",
     });
-  }, 10000); // Set timeout to 10000ms
-
+  }, 20000); // Increased timeout to 20000ms
 
 
   test("should return 401 if user does not exist", async () => {

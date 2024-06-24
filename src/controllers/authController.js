@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const User = require("../Models/userModel");
 const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/generateToken");
+const { check, validationResult } = require('express-validator');
+
 
 const signup = async (req, res) => {
   try {
@@ -42,12 +44,16 @@ const login = async (req, res) => {
 
   try {
     const { username, password } = req.body;
+    console.log('Username:', username);
+    console.log('Password:', password);
 
     // Sanitize input to prevent injection attacks
     const sanitizedUsername = username.trim().toLowerCase();
+    console.log('Sanitized Username:', sanitizedUsername);
 
     // Ensure the username is a string and contains only allowed characters
     if (typeof sanitizedUsername !== 'string' || /[^a-zA-Z0-9]/.test(sanitizedUsername)) {
+      console.log('Invalid username format');
       return res.status(400).send({
         status: "failure",
         message: "Invalid username format",
@@ -55,16 +61,21 @@ const login = async (req, res) => {
     }
 
     // Use parameterized queries to avoid NoSQL injection
-    const user = await User.findOne({ username: sanitizedUsername }).exec();
+    const user = await User.findOne({ username: sanitizedUsername });
+    console.log('User found:', user);
     if (!user) {
+      console.log('User does not exist');
       return res.status(401).send({
         status: "failure",
         message: "User does not exist",
       });
     }
 
+    console.log('About to compare passwords');
     const match = await bcrypt.compare(password, user.password);
+    console.log('Password match:', match);
     if (!match) {
+      console.log('Password is incorrect');
       return res.status(401).send({
         status: "failure",
         message: "Password is incorrect",
@@ -78,6 +89,7 @@ const login = async (req, res) => {
     });
 
     const { jwtToken, password: newpass, ...other } = user._doc;
+    console.log('Login successful');
     res.status(200).send({
       status: "success",
       message: "Logged in successfully",
@@ -86,12 +98,14 @@ const login = async (req, res) => {
       refreshToken,
     });
   } catch (e) {
+    console.log('Error:', e.message);
     res.status(500).send({
       status: "failure",
       message: e.message,
     });
   }
 };
+
 const logout = async (req, res) => {
   try {
     const { refreshToken } = req.body;
