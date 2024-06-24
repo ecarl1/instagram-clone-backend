@@ -33,29 +33,43 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username: username });
+
+    // Input validation and sanitization
+    if (!username || !password) {
+      return res.status(400).send({
+        status: "failure",
+        message: "Username and password are required",
+      });
+    }
+
+    const sanitizedUsername = username.trim().toLowerCase();
+
+    const user = await User.findOne({ username: sanitizedUsername });
     if (!user) {
       return res.status(401).send({
         status: "failure",
-        message: "user does not exist",
+        message: "User does not exist",
       });
     }
+
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(401).send({
         status: "failure",
-        message: "password is incorrect",
+        message: "Password is incorrect",
       });
     }
+
     const accessToken = generateToken.generateAccessToken(user);
     const refreshToken = generateToken.generateRefreshToken(user);
     await User.findByIdAndUpdate(user._id, {
       jwtToken: refreshToken,
     });
+
     const { jwtToken, ...other } = user._doc;
     res.status(200).send({
       status: "success",
-      message: "logged in successfully",
+      message: "Logged in successfully",
       data: other,
       accessToken,
       refreshToken,
@@ -67,6 +81,7 @@ const login = async (req, res) => {
     });
   }
 };
+
 const logout = async (req, res) => {
   try {
     const { refreshToken } = req.body;
