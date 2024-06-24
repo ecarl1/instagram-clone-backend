@@ -49,7 +49,15 @@ const login = async (req, res) => {
     // Sanitize input to prevent injection attacks
     const sanitizedUsername = username.trim().toLowerCase();
 
-    //sdsdsdsd
+    //hghg
+    // Ensure the username is a string and contains only allowed characters
+    if (typeof sanitizedUsername !== 'string' || /[^a-zA-Z0-9]/.test(sanitizedUsername)) {
+      return res.status(400).send({
+        status: "failure",
+        message: "Invalid username format",
+      });
+    }
+
     // Use parameterized queries to avoid NoSQL injection
     const user = await User.findOne({ username: sanitizedUsername }).exec();
     if (!user) {
