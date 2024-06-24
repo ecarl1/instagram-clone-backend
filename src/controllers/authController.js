@@ -38,7 +38,6 @@ const login = async (req, res) => {
   await check('username', 'Username is required').notEmpty().run(req);
   await check('password', 'Password is required').notEmpty().run(req);
 
-  
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -50,9 +49,8 @@ const login = async (req, res) => {
     // Sanitize input to prevent injection attacks
     const sanitizedUsername = username.trim().toLowerCase();
 
-    //sadasdasd
     // Use parameterized queries to avoid NoSQL injection
-    const user = await User.findOne({ username: sanitizedUsername });
+    const user = await User.findOne({ username: sanitizedUsername }).exec();
     if (!user) {
       return res.status(401).send({
         status: "failure",
