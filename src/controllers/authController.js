@@ -42,8 +42,10 @@ const login = async (req, res) => {
       });
     }
 
-    const sanitizedUsername = username.trim().toLowerCase();
+    // Sanitize input to prevent injection attacks
+    const sanitizedUsername = username.replace(/[^a-zA-Z0-9]/g, '').trim().toLowerCase();
 
+    // Use parameterized queries to avoid NoSQL injection
     const user = await User.findOne({ username: sanitizedUsername });
     if (!user) {
       return res.status(401).send({
