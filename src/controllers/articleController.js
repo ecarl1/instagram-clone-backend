@@ -3,7 +3,6 @@ const User = require("../Models/userModel");
 const Comment = require("../Models/commentModel");
 
 
-//start
 const createArticle = async (req, res) => {
   req.body.user = req.user._id;
   const newArticle = new Article(req.body);

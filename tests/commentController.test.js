@@ -60,7 +60,7 @@ describe("Comment Controller", () => {
       status: "success",
       message: "Comment has been created",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);s
   
 
   test("should return 400 if validation fails", async () => {
@@ -77,7 +77,7 @@ describe("Comment Controller", () => {
     expect(response.body).toEqual({
       errors: expect.any(Array),
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error while saving comment", async () => {
     const reqBody = {
@@ -97,7 +97,7 @@ describe("Comment Controller", () => {
       status: "failure",
       message: "Save error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);
 
   test("should return 500 if there is an error while updating the article", async () => {
     const reqBody = {
@@ -123,7 +123,7 @@ describe("Comment Controller", () => {
       status: "failure",
       message: "Update error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
 
   test("should get comments by post ID successfully", async () => {
@@ -152,7 +152,7 @@ describe("Comment Controller", () => {
       status: "success",
       comments: article.comment,
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);
 
   test("should return 500 if there is an error while getting comments by post ID", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -171,5 +171,5 @@ describe("Comment Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 });

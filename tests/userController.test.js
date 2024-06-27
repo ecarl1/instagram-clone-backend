@@ -87,7 +87,7 @@ describe("User Controller", () => {
         profilePicture: "YOUR_DEFAULT_AVATAR_URL",
       },
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 400 if user is not authorized to update the account", async () => {
     const reqBody = {
@@ -104,7 +104,7 @@ describe("User Controller", () => {
       status: "failure",
       message: "you can't update this account.",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error while updating the user", async () => {
     const userId = "1234567890";
@@ -129,7 +129,7 @@ describe("User Controller", () => {
       status: "failure",
       message: "something is wrong !",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should get a user successfully", async () => {
     const userId = "1234567890";
@@ -176,7 +176,7 @@ describe("User Controller", () => {
         gender: user.gender
       },
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error while getting the user", async () => {
     const userId = "1234567890";
@@ -193,7 +193,7 @@ describe("User Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if user does not exist", async () => {
     const userId = "1234567890";
@@ -210,7 +210,7 @@ describe("User Controller", () => {
       status: "failure",
       message: "user does not exist",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
 
   test("should get a user by username successfully", async () => {
@@ -242,7 +242,6 @@ describe("User Controller", () => {
       .get(`/users/u/${username}`)
       .send();
 
-    //console.log(User.findOne.mock.calls); // Added for debugging
     expect(User.findOne).toHaveBeenCalledWith({ username });
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
@@ -259,7 +258,7 @@ describe("User Controller", () => {
         gender: user.gender
       },
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);
 
   test("should return 500 if there is an error while getting the user by username", async () => {
     const username = "testuser";
@@ -270,14 +269,13 @@ describe("User Controller", () => {
       .get(`/users/u/${username}`)
       .send();
 
-    //console.log(User.findOne.mock.calls); // Added for debugging
     expect(User.findOne).toHaveBeenCalledWith({ username });
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if user by username does not exist", async () => {
     const username = "testuser";
@@ -288,14 +286,13 @@ describe("User Controller", () => {
       .get(`/users/u/${username}`)
       .send();
 
-    //console.log(User.findOne.mock.calls); // Added for debugging
     expect(User.findOne).toHaveBeenCalledWith({ username });
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
       status: "failure",
       message: "user does not exist",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
 test("should get followings of a user successfully", async () => {
     const username = "testuser";
@@ -334,7 +331,7 @@ test("should get followings of a user successfully", async () => {
       message: "user info",
       followings: followings,
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
 test("should return 500 if there is an error while getting followings", async () => {
     const username = "testuser";
@@ -351,9 +348,8 @@ test("should return 500 if there is an error while getting followings", async ()
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
-  // Add this to userController.test.js
 test("should return 500 if user does not exist while getting followings", async () => {
     const username = "testuser";
   
@@ -369,7 +365,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "user does not exist",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should get followers of a user successfully", async () => {
     const username = "testuser";
@@ -410,7 +406,7 @@ test("should return 500 if user does not exist while getting followings", async 
         followings: followers,
       },
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
 
   test("should return 500 if there is an error while getting followers", async () => {
@@ -428,7 +424,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if user does not exist while getting followers", async () => {
     const username = "testuser";
@@ -445,7 +441,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "user does not exist",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should follow a user successfully", async () => {
     const currentUser = {
@@ -481,7 +477,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "success",
       message: "user has been followed",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);
   
 
   test("should return 500 if there is an error while following user", async () => {
@@ -499,7 +495,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if trying to follow oneself", async () => {
     const currentUser = {
@@ -520,7 +516,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "you can't follow yourself",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should unfollow a user successfully", async () => {
     const currentUser = {
@@ -556,7 +552,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "success",
       message: "user has been unfollowed",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error while unfollowing user", async () => {
     
@@ -573,7 +569,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if trying to unfollow oneself", async () => {
     const currentUser = {
@@ -594,7 +590,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "you can't unfollow yourself",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should search users successfully", async () => {
     const users = [
@@ -629,7 +625,7 @@ test("should return 500 if user does not exist while getting followings", async 
       limit: 5,
       users: users,
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should return 500 if there is an error while searching users", async () => {
     User.find.mockImplementation(() => ({
@@ -649,7 +645,7 @@ test("should return 500 if user does not exist while getting followings", async 
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   
   

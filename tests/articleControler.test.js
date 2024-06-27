@@ -14,18 +14,18 @@ app.post("/articles", (req, res, next) => {
 }, createArticle);
 
 app.put("/articles/:id/like", (req, res, next) => {
-  req.user = { _id: "1234567890" }; // Mocking req.user if needed
+  req.user = { _id: "1234567890" }; 
   next();
 }, likeUnlike);
 
 
 app.get("/articles/:id", (req, res, next) => {
-  req.user = { _id: "1234567890" }; // Mocking req.user if needed
+  req.user = { _id: "1234567890" }; 
   next();
 }, getArticle);
 
 app.get("/articles/user/:username", (req, res, next) => {
-    req.user = { _id: "1234567890" }; // Mocking req.user if needed
+    req.user = { _id: "1234567890" }; 
     next();
   }, getArticlesUser);
 
@@ -79,7 +79,7 @@ describe("Article Controller", () => {
       message: "article has been created",
     });
     expect(Article.prototype.save).toHaveBeenCalled();
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error", async () => {
     const reqBody = {
@@ -99,7 +99,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "Save error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should update an article successfully", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -138,7 +138,7 @@ describe("Article Controller", () => {
     // Check that the article fields were updated correctly
     expect(article.title).toBe(reqBody.title);
     expect(article.content).toBe(reqBody.content);
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   
   
@@ -168,7 +168,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "you are not authorized",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error while updating the article", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -189,7 +189,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should delete an article successfully", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -214,7 +214,7 @@ describe("Article Controller", () => {
       status: "success",
       message: "article has been deleted",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 401 if user is not authorized to delete the article", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -235,7 +235,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "you are not authorized",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error while deleting the article", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -252,7 +252,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should get timeline articles successfully", async () => {
     const userid = "1234567890";
@@ -335,7 +335,7 @@ describe("Article Controller", () => {
     expect(response.body.status).toBe("success");
     expect(receivedArticles).toEqual(expectedArticles);
     expect(response.body.limit).toBe(expectedArticles.length);
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should return 500 if there is an error while getting timeline", async () => {
     User.findById.mockImplementation(() => ({
@@ -352,7 +352,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should get articles by user successfully", async () => {
     const username = "testuser";
@@ -389,7 +389,7 @@ describe("Article Controller", () => {
     expect(Article.find).toHaveBeenCalledWith({ user: user._id });
     expect(response.status).toBe(200);
     expect(response.body).toEqual(articles);
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should return 500 if there is an error while getting user's articles", async () => {
     const username = "testuser";
@@ -406,7 +406,7 @@ describe("Article Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   
   test("should get an article successfully", async () => {
@@ -436,7 +436,7 @@ describe("Article Controller", () => {
     expect(Article.findOne).toHaveBeenCalledWith({ _id: articleId });
     expect(response.status).toBe(200);
     expect(response.body).toEqual(article);
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should return 500 if there is an error while getting the article", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -455,9 +455,8 @@ describe("Article Controller", () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
-  //could not get the like and unlike to work
 
   test("should like an article successfully", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -483,7 +482,7 @@ describe("Article Controller", () => {
       status: "success",
       message: "the article has been liked",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
 test("should dislike an article successfully", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -509,7 +508,7 @@ test("should dislike an article successfully", async () => {
       status: "success",
       message: "the article has been disliked",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);
 
 test("should return 500 if there is an error", async () => {
     const articleId = "60c72b2f9b1d4c3c4c8e1f30";
@@ -527,7 +526,7 @@ test("should return 500 if there is an error", async () => {
       status: "failure",
       message: "Find error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
 
 });

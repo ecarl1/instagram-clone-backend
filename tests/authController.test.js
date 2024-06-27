@@ -77,7 +77,7 @@ describe("Auth Controller", () => {
         user: reqBody.username,
       },
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if there is an error during signup", async () => {
     const reqBody = {
@@ -98,7 +98,7 @@ describe("Auth Controller", () => {
       status: "failure",
       message: "Save error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
 
 
@@ -166,7 +166,7 @@ describe("Auth Controller", () => {
       accessToken: "access_token",
       refreshToken: "refresh_token",
     });
-  }, 20000); // Increased timeout to 20000ms
+  }, 20000); 
 
 
   test("should return 401 if user does not exist", async () => {
@@ -185,9 +185,9 @@ describe("Auth Controller", () => {
     expect(response.status).toBe(401);
     expect(response.body).toEqual({
       status: "failure",
-      message: "User does not exist",  // Updated to match the correct error message
+      message: "User does not exist", 
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000);
 
   test("should return 401 if password is incorrect", async () => {
     const reqBody = {
@@ -217,7 +217,7 @@ describe("Auth Controller", () => {
       status: "failure",
       message: "Password is incorrect",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should log out a user successfully", async () => {
     const reqBody = {
@@ -236,7 +236,7 @@ describe("Auth Controller", () => {
       status: "success",
       message: "You've been logged out",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should return 400 if no refresh token is provided", async () => {
     const reqBody = {};
@@ -250,7 +250,7 @@ describe("Auth Controller", () => {
       status: "failure",
       message: "logout error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   test("should return 500 if there is an error during logout", async () => {
     const reqBody = {
@@ -269,7 +269,7 @@ describe("Auth Controller", () => {
       status: "failure",
       message: "Logout error",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
 
   test("should authorize a user with a valid token", async () => {
@@ -294,7 +294,7 @@ describe("Auth Controller", () => {
       status: "success",
       message: "You are authorized",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 403 if no authorization header is provided", async () => {
     const response = await supertest(app)
@@ -302,7 +302,7 @@ describe("Auth Controller", () => {
 
     expect(response.status).toBe(403);
     expect(response.body).toBe("You are not authorized");
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   test("should return 500 if the token is invalid", async () => {
     const token = "invalid_token";
@@ -321,7 +321,7 @@ describe("Auth Controller", () => {
       status: "failure",
       message: "token is not valid!",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
 
   
   test("should return 401 if no refresh token is provided", async () => {
@@ -334,7 +334,7 @@ describe("Auth Controller", () => {
       status: "failure",
       message: "You are not authenticated!",
     });
-  }, 10000); // Set timeout to 10000ms
+  }, 10000); 
   
   //the rest of the test were not working for refresh
   
