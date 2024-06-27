@@ -57,7 +57,7 @@ describe("User Model Test", () => {
     try {
       await user2.save();
     } catch (error) {
-      expect(error).toBeInstanceOf(mongoose.Error);
+      expect(error.name).toBe("MongoServerError");
       expect(error.code).toBe(11000); // 11000 is the code for duplicate key error in MongoDB
     }
   });
