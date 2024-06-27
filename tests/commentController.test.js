@@ -60,7 +60,7 @@ describe("Comment Controller", () => {
       status: "success",
       message: "Comment has been created",
     });
-  }, 10000);s
+  }, 10000);
   
 
   test("should return 400 if validation fails", async () => {
